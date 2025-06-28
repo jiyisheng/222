@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>运动技能学习判断题测试系统</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        header {
+            background: linear-gradient(to right, #1a2a6c, #b21f1f);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+        }
+        
+        header h1 {
+            font-size: 2.4rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .sports-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 3rem;
+            opacity: 0.2;
+        }
+        
+        .content-area {
+            padding: 30px;
+            min-height: 500px;
+        }
+        
+        .welcome-screen, .quiz-screen, .results-screen {
+            transition: all 0.5s ease;
+        }
+        
+        .welcome-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .welcome-screen h2 {
+            color: #1a2a6c;
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+        }
+        
+        .welcome-screen p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            line-height: 1.7;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            color: #444;
+        }
+        
+        .features {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .feature {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            width: 220px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature:hover {
+            transform: translateY(-10px);
+        }
+        
+        .feature i {
+            font-size: 2.5rem;
+            color: #b21f1f;
+            margin-bottom: 15px;
+        }
+        
+        .feature h3 {
+            color: #1a2a6c;
+            margin-bottom: 10px;
+        }
+        
+        .btn {
+            background: linear-gradient(to right, #1a2a6c, #b21f1f);
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            margin: 20px 10px;
+            font-weight: 600;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #1a2a6c;
+            color: #1a2a6c;
+        }
+        
+        .quiz-screen {
+            display: none;
+        }
+        
+        .question-container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border-left: 5px solid #1a2a6c;
+        }
+        
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            align-items: center;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 15px;
+        }
+        
+        .question-id {
+            background: #1a2a6c;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        
+        .progress {
+            font-size: 1.1rem;
+            color: #555;
+            font-weight: 600;
+        }
+        
+        .question-text {
+            font-size: 1.3rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            color: #222;
+        }
+        
+        .options {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .option {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .option-btn {
+            width: 100%;
+            padding: 20px;
+            font-size: 1.2rem;
+            border-radius: 12px;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            transition: all 0.2s ease;
+            font-weight: 600;
+        }
+        
+        .option-btn:hover {
+            background: #eef2ff;
+            border-color: #1a2a6c;
+        }
+        
+        .option-btn.selected {
+            background: linear-gradient(to right, #1a2a6c, #3a56c4);
+            color: white;
+            border-color: #1a2a6c;
+        }
+        
+        .true-btn.selected {
+            background: linear-gradient(to right, #2e7d32, #4caf50);
+            border-color: #2e7d32;
+        }
+        
+        .false-btn.selected {
+            background: linear-gradient(to right, #c62828, #f44336);
+            border-color: #c62828;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        .results-screen {
+            display: none;
+            padding: 20px;
+        }
+        
+        .results-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .score-display {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #1a2a6c;
+            margin: 20px 0;
+        }
+        
+        .score-text {
+            font-size: 1.4rem;
+            color: #444;
+            margin-bottom: 30px;
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+            gap: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        
+        .result-item {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            border-left: 4px solid #e0e0e0;
+        }
+        
+        .result-item.correct {
+            border-left-color: #4caf50;
+        }
+        
+        .result-item.incorrect {
+            border-left-color: #f44336;
+        }
+        
+        .question-id-small {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #1a2a6c;
+        }
+        
+        .question-text-small {
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        
+        .user-answer, .correct-answer {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        
+        .user-answer.correct {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .user-answer.incorrect {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        .correct-answer {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .stats-box {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 25px 0;
+        }
+        
+        .stat {
+            text-align: center;
+            padding: 20px;
+            border-radius: 15px;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            min-width: 180px;
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #1a2a6c;
+        }
+        
+        .stat-label {
+            font-size: 1.1rem;
+            color: #555;
+            margin-top: 10px;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: white;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 0 0 20px 20px;
+        }
+        
+        .device-support {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .device {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 15px;
+            width: 120px;
+            text-align: center;
+        }
+        
+        .device i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #1a2a6c;
+        }
+        
+        @media (max-width: 768px) {
+            .options {
+                flex-direction: column;
+            }
+            
+            .features {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .feature {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-box {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .stat {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .device-support {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>运动技能学习判断题测试系统</h1>
+            <p>测试您对运动技能学习理论的理解，每次随机抽取10道题目进行测试</p>
+            <div class="sports-icon">
+                <i class="fa-solid fa-medal"></i>
+            </div>
+        </header>
+        
+        <div class="content-area">
+            <!-- 欢迎屏幕 -->
+            <div class="welcome-screen" id="welcomeScreen">
+                <h2>欢迎参加运动技能学习理论测试</h2>
+                <p>本测试包含100道关于运动技能学习理论的判断题，每次测试将随机抽取10道题目。测试完成后，您可以查看详细的答题结果和分析。</p>
+                
+                <div class="features">
+                    <div class="feature">
+                        <i class="fa-solid fa-shuffle"></i>
+                        <h3>随机抽题</h3>
+                        <p>每次测试随机抽取10道题目</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fa-solid fa-chart-simple"></i>
+                        <h3>详细分析</h3>
+                        <p>测试后查看每道题的解析</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fa-solid fa-rotate"></i>
+                        <h3>随时重测</h3>
+                        <p>无限次重新测试巩固知识</p>
+                    </div>
+                </div>
+                
+                <button class="btn" id="startBtn">开始测试</button>
+                
+                <div class="device-support">
+                    <div class="device">
+                        <i class="fa-solid fa-desktop"></i>
+                        <div>电脑访问</div>
+                    </div>
+                    <div class="device">
+                        <i class="fa-solid fa-mobile-screen"></i>
+                        <div>手机访问</div>
+                    </div>
+                    <div class="device">
+                        <i class="fa-solid fa-tablet-screen-button"></i>
+                        <div>平板访问</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 测试屏幕 -->
+            <div class="quiz-screen" id="quizScreen">
+                <div class="question-container">
+                    <div class="question-header">
+                        <div class="question-id">题目 #<span id="questionId">1</span></div>
+                        <div class="progress">第 <span id="currentQuestion">1</span>/10 题</div>
+                    </div>
+                    
+                    <div class="question-text" id="questionText">
+                        题目内容加载中...
+                    </div>
+                    
+                    <div class="options">
+                        <div class="option">
+                            <button class="option-btn true-btn" id="trueBtn">对</button>
+                        </div>
+                        <div class="option">
+                            <button class="option-btn false-btn" id="falseBtn">错</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="controls">
+                    <button class="btn btn-outline" id="prevBtn"><i class="fa-solid fa-arrow-left"></i> 上一题</button>
+                    <button class="btn" id="nextBtn">下一题 <i class="fa-solid fa-arrow-right"></i></button>
+                    <button class="btn" id="submitBtn" style="display:none;">提交答案</button>
+                </div>
+            </div>
+            
+            <!-- 结果屏幕 -->
+            <div class="results-screen" id="resultsScreen">
+                <div class="results-header">
+                    <h2>测试结果</h2>
+                    <div class="score-display"><span id="score">0</span>/10</div>
+                    <div class="score-text" id="scoreText">结果分析</div>
+                </div>
+                
+                <div class="stats-box">
+                    <div class="stat">
+                        <div class="stat-value"><span id="correctCount">0</span></div>
+                        <div class="stat-label">正确题目</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value"><span id="incorrectCount">0</span></div>
+                        <div class="stat-label">错误题目</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value"><span id="accuracy">0</span>%</div>
+                        <div class="stat-label">正确率</div>
+                    </div>
+                </div>
+                
+                <h3>答题详情：</h3>
+                <div class="results-grid" id="resultsGrid">
+                    <!-- 结果项将通过JavaScript动态生成 -->
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn" id="restartBtn">重新测试</button>
+                    <button class="btn btn-outline" id="reviewBtn">查看错误题目</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>运动技能学习判断题测试系统 &copy; 2023 | 本地文件 - 无需联网</p>
+        </div>
+    </div>
+
+    <script>
+        // 完整的题库数据
+        const questions = [
+            { id: "21364", text: "学习初期，在没有掌握基本的技术动作、运动模式之前，应该较频繁地提供反馈。", answer: true },
+            { id: "21363", text: "过度的追加反馈不可能削弱内在反馈的作用，不会阻碍运动技能的学习。", answer: false },
+            { id: "21362", text: "所有运动技能学习理论都强调变异练习，对提高技能学习效果的重要作用，变异练习可以促进新任务的迁移。", answer: true },
+            { id: "21361", text: "学会骑自行车这项运动技能习得，主要是通过内隐学习。", answer: true },
+            { id: "21360", text: "运动技能的示范学习多聚焦于视觉示范，但某些对于听觉示范可能更有利，比如按一定时机和节奏组合的动作序列。", answer: true },
+            { id: "21359", text: "教练要告诉练习者应该看什么或关注什么，捕捉最不关键的加工信息。", answer: false },
+            { id: "21358", text: "将运动技能学习从训练场换到赛场，属于情境迁移。", answer: true },
+            { id: "21357", text: "专业网球运动员可以在不同材质和硬度的球场上能够很好的发挥，体现了新技能迁移意义。", answer: true },
+            { id: "21356", text: "迁移测试：评价动作操作对新异环境的适应性，反映动作熟练操作的环境适应性特点。", answer: true },
+            { id: "21355", text: "保持测试方式中，练习结束到保持测试的时间间隔，必须保证能够消除各种绩效变量对动作操作的暂时影响通常需要间隔24小时会更长。", answer: true },
+            { id: "21354", text: "保持测试方式首先要求练习者对规定动作进行一定时间的练习，不能让其休息，然后再安排一组测试，让练习者重新操作，通过评价对动作操作绩效的保持情况，来评价动作技能的学习。", answer: false },
+            { id: "21353", text: "评价练习中学习进步的一个通用的方法：绘制运动技能的绩效曲线。", answer: true },
+            { id: "21352", text: "动作技能学习的阶段化划分是相对的：因为动作技能学习的过程是连续的，阶段与阶段之间没有明显的界限。", answer: true },
+            { id: "21351", text: "个体通过练习所获得运动技能将成为个体自身一部分，在必要时发挥作用，但不会持久存在。", answer: false },
+            { id: "21350", text: "依据运动技能学习的概念，学习过的人已不再是学习之前的人。", answer: true },
+            { id: "21349", text: "绩效变化不可以推测学习变化。", answer: false },
+            { id: "21348", text: "年龄增长使得肌肉力量增强，进而提高足球运动员绩效，属于学习。", answer: false },
+            { id: "21347", text: "孩子成长促进其绩效提高，虽然非练习，但仍旧属于学习。", answer: false },
+            { id: "21346", text: "运动技能学习是个体通过练习或经历而导致的某种技能绩效潜在的、相对持久的变化。", answer: true },
+            { id: "21345", text: "影响时机准确性的主要因素是动作时间。", answer: true },
+            { id: "21344", text: "当个体用最大的力量去完成动作时，力量的变异会相对减少，各肌肉之间的差异也相对稳定，因此做出的动作反而会变得较稳定，动作误差减少。", answer: true },
+            { id: "21343", text: "操作者收缩力量或动作速度增加，肌肉收缩力量变异也会增加。但肌肉用力增加到极限时，动作力量的变异反而增加。", answer: false },
+            { id: "21342", text: "导致快速运动的准确性下降原因可能是：运动程序沿中枢神经系统传输到肌体肌肉活动的过程有关。", answer: true },
+            { id: "21341", text: "如下依据菲茨定律（Fitts'law）的推论，在运动技能控制中，开放环路控制和闭合环路控制是有机地整合在一起的。", answer: true },
+            { id: "21340", text: "如下依据菲茨定律（Fitts'law）的推论，即便是快速运动动作，在动作开始前的运动编程阶段也存在反馈的动作校正过程，也就是对动作目标的大小和距离，及动作的准确性要求调整运动程序。", answer: true },
+            { id: "21339", text: "棒球挥棒击球，增加挥棒幅度，为了保证准确性，挥棒时间有小幅增加，但是球的打击力量则会增加很多。", answer: true },
+            { id: "21338", text: "肢体移动较长距离到一个较大目标的动作与移动较短距离到一个较小的目标的动作是一样快。", answer: true },
+            { id: "21337", text: "根据菲茨定律[MT=a+bLog2(2A/W)]，动作难度越低，运动时间则长。", answer: false },
+            { id: "21336", text: "自由度数量越多，肢体运动的方式多样（复杂），活动范围越广。", answer: true },
+            { id: "21335", text: "参数：运动程序中可以修改的部分特征。基于运动情境的具体特征，在动作编程阶段进行参数的确定。", answer: true },
+            { id: "21334", text: "概括化运动程序：通过练习保存长时记忆中。", answer: true },
+            { id: "21333", text: "与运动程序不同，概括化运动程序在执行时可以根据外界条件进行修正，以保证动作可以完整并保留一定的创新空间。", answer: true },
+            { id: "21332", text: "概括化运动程序反映特定的一类运动模式。", answer: true },
+            { id: "21331", text: "运动程序不能被概括化。", answer: false },
+            { id: "21330", text: "概括化运动程序不是动作存储的方式。", answer: false },
+            { id: "21329", text: "开放环路控制的缺点无法处理一些突发状况。", answer: true },
+            { id: "21328", text: "开放环路控制的优点运动技能执行的整体效率较高，速度快。", answer: true },
+            { id: "21327", text: "将闭合环路每次拆开调整来看，闭合环路也可以看作是一系列开放环路控制的组合。", answer: true },
+            { id: "21326", text: "许多运动技能最初是开放环路控制，如果后续运动时间较长，反馈环路开始起作用中枢系统根据运动效果有关的信息进行动作调整，使得开放环路控制变成闭合环路控制。", answer: true },
+            { id: "21325", text: "开放环路控制和闭合环路控制，完全独立，在动作控制中两者不能相互转化。", answer: false },
+            { id: "21324", text: "比如当越来越接近篮球时，篮球看起来变大了，就是光流的一种表现。", answer: true },
+            { id: "21323", text: "外周视觉运动中的作用分辨加工（比如，比赛中快速分辨是对手还是队友。）", answer: false },
+            { id: "21322", text: "当光线照明不佳，中央视觉系统功能会受影响。", answer: true },
+            { id: "21321", text: "信息输入是闭合环路控制顺利完成的不可或缺的保障。", answer: true },
+            { id: "21320", text: "游泳比赛中运动员对动作的调整也是典型的开放环路控制例子。", answer: false },
+            { id: "21319", text: "闭合环路控制的不足：无法解释人类的快速技能动作。", answer: true },
+            { id: "21318", text: "闭合环路控制的不足：快速追踪任务中是无效的。", answer: true },
+            { id: "21317", text: "感知来自姿势的控制信息，属于外部感觉。", answer: false },
+            { id: "21316", text: "感知来自关节的角度信息，属于外部感觉。", answer: false },
+            { id: "21315", text: "感知来自肌肉的力量信息，属于外部感觉。", answer: false },
+            { id: "21314", text: "感知来自肢体的位置信息，属于外部感觉。", answer: false },
+            { id: "21313", text: "感知来自姿势的控制信息，属于内部感觉。", answer: false },
+            { id: "21312", text: "感知来自关节的角度信息，属于内部感觉。", answer: false },
+            { id: "21311", text: "感知来自肌肉的力量信息，属于内部感觉。", answer: false },
+            { id: "21310", text: "感知来自肢体的位置信息，属于内部感觉。", answer: false },
+            { id: "21309", text: "感知来自姿势的控制信息，属于本体感觉。", answer: true },
+            { id: "21308", text: "感知来自关节的角度信息，属于本体感觉。", answer: true },
+            { id: "21307", text: "感知来自肌肉的力量信息，属于本体感觉。", answer: true },
+            { id: "21306", text: "感知来自肢体的位置信息，属于本体感觉。", answer: true },
+            { id: "21305", text: "首先，设定一个动作目标，然后大脑发出指令执行动作，眼睛等感受器，捕获外界信息。随后根据外界环境情况，调整动作，直至目标完成。这是开放环路控制的典型情形。", answer: false },
+            { id: "21304", text: "首先，设定一个动作目标，然后大脑发出指令执行动作，眼睛等感受器，捕获外界信息。随后根据外界环境情况，调整动作，直至目标完成。这是闭合环路控制的典型情形。", answer: true },
+            { id: "21303", text: "如运动员唤醒水平太高，建议使用相应的调试方法来提高赛前的兴奋水平。", answer: false },
+            { id: "21302", text: "如运动员唤醒水平太低，建议使用相应的调试方法来降低赛前的兴奋水平。", answer: false },
+            { id: "21301", text: "倒U形假说的运动启示：教练员或训练老师，需要根据不同的运动技能特征建立其最佳的唤醒水平。", answer: true },
+            { id: "21300", text: "不同运动等级而区分的倒U形假说，启示初级运动员最佳唤醒水平比高水平要低些；即使中等唤醒水平对其也会造成不利影响。", answer: true },
+            { id: "21299", text: "中等难度运动，其唤醒水平适中最好。", answer: true },
+            { id: "21298", text: "进攻方假装停球与防守队员进行对抗，突然移动位置，防守队员盯防失败，进攻方投篮成功。这是经典的心理不应期现象。", answer: true },
+            { id: "21297", text: "整个动作系统分解成多个自动化的工作组块，不断练习后，实现不需要注意资源。", answer: true },
+            { id: "21296", text: "自动加工的特点是：一旦习得难以修正，灵活性相对较差。", answer: true },
+            { id: "21295", text: "自动加工是重复练习的结果。", answer: true },
+            { id: "21294", text: "运动员力图躲避观众的噪音等无关的刺激，集中注意进行比赛是选择性注意。", answer: true },
+            { id: "21293", text: "注意加工的资源有限，需要合理分配调控注意，这是注意容量有限理论。", answer: true },
+            { id: "21292", text: "连续性运动相比非连续性运动，更容易练习后遗忘了。", answer: false },
+            { id: "21291", text: "尽可能防止对手预测到他要做什么或何时做，对手之间这种战略较量常常使得竞技比赛更加吸引人。", answer: true },
+            { id: "21290", text: "随机变换更多动作，对手的进攻能力有效遏制。", answer: true },
+            { id: "21289", text: "错误预测带来无效或破坏性失误，增加困难。", answer: true },
+            { id: "21288", text: "希克定律在不同相容水平的刺激-反应中仍有效，只是在相容性较低时，不会有任何变化的坡度。", answer: false },
+            { id: "21287", text: "刺激与反应的相容性是影响反应时的重要因素之一。", answer: true },
+            { id: "21286", text: "希克定律（Hick's Law）运动启示是在对抗性运动中，设法增加对手进行动作反应的数量，来增加对手信息处理延迟时间，以更好制约对手的进攻。", answer: true },
+            { id: "21285", text: "根据希克定律，S-R（刺激-应答）是直线关系。", answer: false },
+            { id: "21284", text: "运动决策的评价主要包括运动决策的速度和有效性两方面。", answer: true },
+            { id: "21283", text: "竞技体育领域的运动决策是指在复杂的竞技运动情境，为了获得胜利，预见运动结果而选择行为的认知过程。", answer: true },
+            { id: "21282", text: "决策所有风险与收益都基于运动员自己的理解与预期。", answer: true },
+            { id: "21281", text: "决策遵循期望收益最大化原则：如乒乓球运动员选用自己最擅长的且对手威胁最大的发球方式。", answer: true },
+            { id: "21280", text: "运动决策不会影响运动决策。", answer: false },
+            { id: "21279", text: "运动决策频率上，开放式运动低于闭锁式运动。", answer: false },
+            { id: "21278", text: "运动决策频率上，开放式运动高于闭锁式运动。", answer: true },
+            { id: "21277", text: "篮球比赛中，拿着篮球的篮球运动员一迅雷不及掩耳之势把球传给已经在篮下的同伴，这属于应答编码。", answer: true },
+            { id: "21276", text: "篮球比赛中，拿着篮球的篮球运动员一迅雷不及掩耳之势把球传给已经在篮下的同伴，这属于应答选择。", answer: false },
+            { id: "21275", text: "篮球比赛中，拿着篮球的篮球运动员选择快速准备将球传给已经在篮下的同伴，这属于应答编码。", answer: false },
+            { id: "21274", text: "篮球比赛中，拿着篮球的篮球运动员选择快速准备将球传给已经在篮下的同伴，这属于应答选择。", answer: true },
+            { id: "21273", text: "篮球比赛中，拿着篮球的篮球运动员看到队友成功切入篮球框下，这属于刺激识别。", answer: true },
+            { id: "21272", text: "篮球比赛中，拿着篮球的篮球运动员看到队友成功切入篮球框下，这属于应答选择。", answer: false },
+            { id: "21271", text: "幻觉是外界传递给运动员的运动信息之一。", answer: false },
+            { id: "21270", text: "运动信息输入要么就是环境给运动员提供特定刺激，要么就是运动员自己主动在众多信息里挑选有用信息进行加工。", answer: true },
+            { id: "21269", text: "通过环境提供给运动者一个特定刺激，这是运动员获取外界信息的方式之一。", answer: true },
+            { id: "21268", text: "大量外界信息刺激存在的情况下，运动员需要挑选出有用的信息进行加工，这是运动员主动寻找信息过程。", answer: true },
+            { id: "21267", text: "通过环境提供给运动者一个特定刺激，这是运动员获取外界信息的方式之一。", answer: true },
+            { id: "21266", text: "正电子断层扫描（PET）主要用于测量运动时，肌肉的电活动。", answer: false },
+            { id: "21265", text: "动力学分析在研究物体运动中考虑了力的作用，力是人体运动的间接原因。", answer: false },
+            { id: "21264", text: "协调性是运动学指标之一。", answer: true },
+            { id: "21263", text: "关节角度是运动学指标之一。", answer: true },
+            { id: "21262", text: "加速度是运动学指标之一。", answer: true },
+            { id: "21261", text: "速度是运动学指标之一。", answer: true },
+            { id: "21260", text: "位移是运动学指标之一。", answer: true },
+            { id: "21259", text: "误差均方根（RMS）为0时，则说明两条轨迹曲线不一致。", answer: false },
+            { id: "21258", text: "误差均方根（RMS）代表轨迹误差中近似于两条轨迹曲线之间的面积。", answer: true },
+            { id: "21257", text: "动作的目标位置和实际操作之间不仅仅存在距离上的误差，还存在误差的方向问题。常用的解决方法是在两维和三维空间上进行误差计算。", answer: true },
+            { id: "21256", text: "拳击、乒乓球运动中运动员都需要根据对手的不同动作或环境的改变做出快速合理的应答动作，这是选择反应。", answer: true },
+            { id: "21255", text: "拳击、乒乓球运动中运动员都需要根据对手的不同动作或环境的改变做出快速合理的应答动作，这是辨别反应。", answer: false },
+            { id: "21254", text: "拳击、乒乓球运动中运动员都需要根据对手的不同动作或环境的改变做出快速合理的应答动作，这是简单反应。", answer: false },
+            { id: "21253", text: "排球、篮球运动员在比赛中需要对某些位置的球或者对某些对手进行防守应答，而对其他位置或对手不需要防守应答，这是选择反应。", answer: false },
+            { id: "21252", text: "排球、篮球运动员在比赛中需要对某些位置的球或者对某些对手进行防守应答，而对其他位置或对手不需要防守应答，这是辨别反应。", answer: true },
+            { id: "21251", text: "排球、篮球运动员在比赛中需要对某些位置的球或者对某些对手进行防守应答，而对其他位置或对手不需要防守应答，这是简单反应。", answer: false },
+            { id: "21250", text: "在短跑比赛的起跑过程中，发令枪是唯一的刺激信号，运动员发力蹬腿是唯一的动作反应，这种反应是选择反应。", answer: false },
+            { id: "21249", text: "在短跑比赛的起跑过程中，发令枪是唯一的刺激信号，运动员发力蹬腿是唯一的动作反应，这种反应是辨别反应。", answer: false },
+            { id: "21248", text: "在短跑比赛的起跑过程中，发令枪是唯一的刺激信号，运动员发力蹬腿是唯一的动作反应，这种反应是简单反应。", answer: true },
+            { id: "21247", text: "反应时和动作时相加是应答时间。", answer: true },
+            { id: "21246", text: "系列性运动技能是将非连续性动作进行组合。", answer: true },
+            { id: "21245", text: "非连续性动作技能持续时间比系列性运动技能持续的要长。", answer: false },
+            { id: "21244", text: "武术套路属于系列性运动技能。", answer: true },
+            { id: "21243", text: "舞蹈属于系列性运动技能。", answer: true },
+            { id: "21242", text: "操作成分是运动技能构成的认知要素之一。", answer: false },
+            { id: "21241", text: "移动成分是运动技能构成的认知要素之一。", answer: false },
+            { id: "21240", text: "为动作提供支撑平台的姿势成分是运动技能构成的运动要素之一。", answer: true },
+            { id: "21239", text: "收集有关动作效果的反馈信息是运动技能构成的运动要素之一。", answer: false },
+            { id: "21238", text: "发出运动指令，产生有组织的肌肉活动，且实施行动是运动技能构成的运动要素之一。", answer: false },
+            { id: "21237", text: "决定做什么，如何做，何时做，是运动技能构成的认知要素之一。", answer: true },
+            { id: "21236", text: "感知重要的环境信息，是运动技能构成的认知要素之一。", answer: true },
+            { id: "21235", text: "运动体能需要练习来逐步提高，而运动技能则不需要练习即可提高。", answer: false },
+            { id: "21234", text: "运动技术有先进落后之分。", answer: true },
+            { id: "21233", text: "运动技术都有自己特定的动作要领，规范及适用场合。", answer: true },
+            { id: "21232", text: "运动技术是不合理有效的动作方法。", answer: false },
+            { id: "21231", text: "运动能力越弱，则练习后其运动技能进步更神速；否则运动能力越强，则练习后其运动技能进步更慢。", answer: false },
+            { id: "21230", text: "运动技能是通过努力习得的符合某种法则的动作方式。", answer: true }
+        ];
+
+        // DOM元素
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const quizScreen = document.getElementById('quizScreen');
+        const resultsScreen = document.getElementById('resultsScreen');
+        const startBtn = document.getElementById('startBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const trueBtn = document.getElementById('trueBtn');
+        const falseBtn = document.getElementById('falseBtn');
+        const restartBtn = document.getElementById('restartBtn');
+        const reviewBtn = document.getElementById('reviewBtn');
+        const questionText = document.getElementById('questionText');
+        const questionId = document.getElementById('questionId');
+        const currentQuestion = document.getElementById('currentQuestion');
+        const scoreElement = document.getElementById('score');
+        const scoreText = document.getElementById('scoreText');
+        const correctCount = document.getElementById('correctCount');
+        const incorrectCount = document.getElementById('incorrectCount');
+        const accuracy = document.getElementById('accuracy');
+        const resultsGrid = document.getElementById('resultsGrid');
+
+        // 测试状态
+        let testQuestions = [];
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+        let testResults = [];
+
+        // 初始化
+        startBtn.addEventListener('click', startTest);
+        restartBtn.addEventListener('click', startTest);
+        reviewBtn.addEventListener('click', reviewTest);
+        prevBtn.addEventListener('click', showPrevQuestion);
+        nextBtn.addEventListener('click', showNextQuestion);
+        trueBtn.addEventListener('click', () => selectAnswer(true));
+        falseBtn.addEventListener('click', () => selectAnswer(false));
+        submitBtn.addEventListener('click', showResults);
+
+        // 开始测试
+        function startTest() {
+            // 随机选择10道题目
+            testQuestions = [...questions].sort(() => 0.5 - Math.random()).slice(0, 10);
+            currentQuestionIndex = 0;
+            userAnswers = Array(10).fill(null);
+            testResults = [];
+            
+            // 显示测试界面
+            welcomeScreen.style.display = 'none';
+            resultsScreen.style.display = 'none';
+            quizScreen.style.display = 'block';
+            
+            // 显示第一题
+            showQuestion();
+        }
+
+        // 显示当前题目
+        function showQuestion() {
+            const question = testQuestions[currentQuestionIndex];
+            questionText.textContent = question.text;
+            questionId.textContent = question.id;
+            currentQuestion.textContent = currentQuestionIndex + 1;
+            
+            // 更新按钮状态
+            prevBtn.disabled = currentQuestionIndex === 0;
+            nextBtn.style.display = currentQuestionIndex === 9 ? 'none' : 'block';
+            submitBtn.style.display = currentQuestionIndex === 9 ? 'block' : 'none';
+            
+            // 更新选项状态
+            trueBtn.classList.toggle('selected', userAnswers[currentQuestionIndex] === true);
+            falseBtn.classList.toggle('selected', userAnswers[currentQuestionIndex] === false);
+        }
+
+        // 选择答案
+        function selectAnswer(answer) {
+            userAnswers[currentQuestionIndex] = answer;
+            trueBtn.classList.toggle('selected', answer === true);
+            falseBtn.classList.toggle('selected', answer === false);
+            
+            // 自动进入下一题（如果不是最后一题）
+            if (currentQuestionIndex < 9) {
+                setTimeout(() => {
+                    currentQuestionIndex++;
+                    showQuestion();
+                }, 300);
+            }
+        }
+
+        // 显示上一题
+        function showPrevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                showQuestion();
+            }
+        }
+
+        // 显示下一题
+        function showNextQuestion() {
+            if (currentQuestionIndex < 9) {
+                currentQuestionIndex++;
+                showQuestion();
+            }
+        }
+
+        // 显示结果
+        function showResults() {
+            // 计算得分
+            let correct = 0;
+            testResults = [];
+            
+            for (let i = 0; i < testQuestions.length; i++) {
+                const isCorrect = userAnswers[i] === testQuestions[i].answer;
+                if (isCorrect) correct++;
+                
+                testResults.push({
+                    id: testQuestions[i].id,
+                    text: testQuestions[i].text,
+                    userAnswer: userAnswers[i],
+                    correctAnswer: testQuestions[i].answer,
+                    isCorrect: isCorrect
+                });
+            }
+            
+            // 更新结果界面
+            scoreElement.textContent = correct;
+            correctCount.textContent = correct;
+            incorrectCount.textContent = 10 - correct;
+            accuracy.textContent = Math.round((correct / 10) * 100);
+            
+            // 设置评分文本
+            if (correct >= 9) {
+                scoreText.textContent = "优秀！您对运动技能学习理论有深刻的理解！";
+            } else if (correct >= 7) {
+                scoreText.textContent = "良好！您对运动技能学习理论有较好的掌握！";
+            } else if (correct >= 5) {
+                scoreText.textContent = "及格！继续努力，加强对理论知识的掌握！";
+            } else {
+                scoreText.textContent = "需要加强！建议复习运动技能学习相关理论！";
+            }
+            
+            // 生成结果网格
+            resultsGrid.innerHTML = '';
+            testResults.forEach(result => {
+                const resultItem = document.createElement('div');
+                resultItem.className = `result-item ${result.isCorrect ? 'correct' : 'incorrect'}`;
+                
+                resultItem.innerHTML = `
+                    <div class="question-id-small">题目 #${result.id}</div>
+                    <div class="question-text-small">${result.text}</div>
+                    <div class="user-answer ${result.isCorrect ? 'correct' : 'incorrect'}">
+                        您的答案: ${result.userAnswer === true ? '对' : '错'}
+                    </div>
+                    <div class="correct-answer">
+                        正确答案: ${result.correctAnswer === true ? '对' : '错'}
+                    </div>
+                `;
+                
+                resultsGrid.appendChild(resultItem);
+            });
+            
+            // 显示结果界面
+            quizScreen.style.display = 'none';
+            resultsScreen.style.display = 'block';
+        }
+
+        // 查看错误题目
+        function reviewTest() {
+            // 只保留错误题目
+            testQuestions = testQuestions.filter((q, i) => !testResults[i].isCorrect);
+            
+            if (testQuestions.length === 0) {
+                alert("恭喜！您没有答错的题目！");
+                return;
+            }
+            
+            userAnswers = Array(testQuestions.length).fill(null);
+            currentQuestionIndex = 0;
+            
+            // 显示测试界面
+            resultsScreen.style.display = 'none';
+            quizScreen.style.display = 'block';
+            
+            // 显示第一题
+            showQuestion();
+        }
+    </script>
+</body>
+</html>
